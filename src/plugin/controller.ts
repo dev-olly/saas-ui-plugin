@@ -1,6 +1,8 @@
-figma.showUI(__html__);
+import { CreateSideNavItem } from './nodes/SideNav';
 
-figma.ui.onmessage = (msg) => {
+figma.showUI(__html__, { width: 400, height: 700 });
+
+figma.ui.onmessage = async (msg) => {
   if (msg.type === 'create-rectangles') {
     const nodes = [];
 
@@ -20,7 +22,16 @@ figma.ui.onmessage = (msg) => {
       type: 'create-rectangles',
       message: `Created ${msg.count} Rectangles`,
     });
+  } else if (msg.type === 'log-node') {
+    console.log(figma.currentPage.selection[0]);
+  } else if (msg.type === 'create-component') {
+    console.log('Create a component');
+    const componentNode = await CreateSideNavItem();
+    figma.currentPage.appendChild(componentNode);
+
+    figma.currentPage.selection = [componentNode];
+    figma.viewport.scrollAndZoomIntoView([componentNode]);
   }
 
-  figma.closePlugin();
+  // figma.closePlugin();
 };
