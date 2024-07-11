@@ -1,4 +1,5 @@
 import { CreateSideNavItem } from './nodes/SideNav';
+import { traverse } from './utils';
 
 figma.showUI(__html__, { width: 400, height: 700 });
 
@@ -31,7 +32,13 @@ figma.ui.onmessage = async (msg) => {
 
     figma.currentPage.selection = [componentNode];
     figma.viewport.scrollAndZoomIntoView([componentNode]);
+  } else if (msg.type === 'convert-node-to-json') {
+    const node = figma.currentPage.selection[0];
+    const nodeJSON = JSON.stringify(traverse(node), null, 2);
+    // copy to clipboard
+    figma.ui.postMessage({
+      type: 'copy-to-clipboard',
+      message: nodeJSON,
+    });
   }
-
-  // figma.closePlugin();
 };

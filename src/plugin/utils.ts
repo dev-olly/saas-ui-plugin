@@ -63,3 +63,33 @@ export const hexToRgb = (hexCode, includeAlpha = true) => {
 
   return objColor;
 };
+
+export function traverse(node) {
+  const obj = {
+    id: node.id,
+    name: node.name,
+    type: node.type,
+    children: node.children ? node.children.map((child) => traverse(child)) : undefined,
+    width: node.width,
+    height: node.height,
+    x: node.x,
+    y: node.y,
+    rotation: node.rotation,
+    constraints: node.constraints,
+    fills: node.fills,
+    strokes: node.strokes,
+    strokeWeight: node.strokeWeight,
+    strokeAlign: node.strokeAlign,
+    cornerRadius: node.cornerRadius,
+    characters: node.characters,
+    fontSize: node.fontSize,
+    fontName: node.fontName,
+    textAlignHorizontal: node.textAlignHorizontal,
+    textAlignVertical: node.textAlignVertical,
+    opacity: node.opacity,
+    visible: node.visible,
+    blendMode: node.blendMode,
+    effects: node.effects,
+  };
+  return obj;
+}

@@ -45,6 +45,11 @@ function App() {
   const createNode = () => {
     window.parent.postMessage({ pluginMessage: { type: 'create-component' } }, '*');
   };
+
+  const convertNodeToJSON = () => {
+    window.parent.postMessage({ pluginMessage: { type: 'convert-node-to-json' } }, '*');
+  };
+
   React.useEffect(() => {
     fetchComponents().then((data) => {
       console.log(data);
@@ -56,6 +61,21 @@ function App() {
       const { type, message } = event.data.pluginMessage;
       if (type === 'create-rectangles') {
         console.log(`Figma Says: ${message}`);
+      } else if (type === 'copy-to-clipboard') {
+        console.log(`Figma Says: ${message}`);
+
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(message);
+        } else {
+          const textarea = document.createElement('textarea');
+          textarea.value = message;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+        }
+
+        console.log('Copied to clipboard');
       }
     };
   }, []);
@@ -77,6 +97,10 @@ function App() {
 
         <button className="px-3 py-1 border-1 text-sm border-black ml-4 rounded-md" onClick={createNode}>
           Create
+        </button>
+
+        <button className="px-3 py-1 border-1 text-sm border-black ml-4 rounded-md" onClick={convertNodeToJSON}>
+          Convert Node to JSON
         </button>
       </div>
 
