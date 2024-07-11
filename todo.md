@@ -1,11 +1,12 @@
 - JSON converter to UI components - done
-  - Create Frames
-  - Create Vector
+  - TextNode - done
+  - Create Frames - done
+  - Create Vector - done
+  - GroupNode - done
+  - Rectangle - done
+  - figure this fill issue out
   - Document
-  - TextNode
-  - Rectangle
   - Instance
   - Component
   - TableNode
-  - GroupNode
 - Build Schema

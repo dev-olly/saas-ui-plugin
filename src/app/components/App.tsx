@@ -43,7 +43,7 @@ function App() {
   };
 
   const createNode = () => {
-    window.parent.postMessage({ pluginMessage: { type: 'create-component' } }, '*');
+    window.parent.postMessage({ pluginMessage: { type: 'create-node' } }, '*');
   };
 
   const convertNodeToJSON = () => {
@@ -51,11 +51,11 @@ function App() {
   };
 
   React.useEffect(() => {
-    fetchComponents().then((data) => {
-      console.log(data);
-      setComponents(data);
-      setLoading(false);
-    });
+    // fetchComponents().then((data) => {
+    //   console.log(data);
+    //   setComponents(data);
+    //   setLoading(false);
+    // });
     // This is how we read messages sent from the plugin controller
     window.onmessage = (event) => {
       const { type, message } = event.data.pluginMessage;

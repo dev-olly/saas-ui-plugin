@@ -90,6 +90,21 @@ export function traverse(node) {
     visible: node.visible,
     blendMode: node.blendMode,
     effects: node.effects,
+    vectorNetwork: node.vectorNetwork,
+    vectorPaths: node.vectorPaths,
   };
   return obj;
+}
+
+export const NODE_TYPES = {
+  TEXT: 'TEXT',
+  FRAME: 'FRAME',
+  GROUP: 'GROUP',
+  COMPONENT: 'COMPONENT',
+  VECTOR: 'VECTOR',
+  RECTANGLE: 'RECTANGLE',
+};
+
+export function clone(val) {
+  return JSON.parse(JSON.stringify(val));
 }
