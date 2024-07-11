@@ -1,2 +1,11 @@
-- JSON converter to UI components
+- JSON converter to UI components - done
+  - Create Frames
+  - Create Vector
+  - Document
+  - TextNode
+  - Rectangle
+  - Instance
+  - Component
+  - TableNode
+  - GroupNode
 - Build Schema
