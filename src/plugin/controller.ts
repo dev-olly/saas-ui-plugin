@@ -1,4 +1,3 @@
-import { CreateSideNavItem } from './nodes/SideNav';
 import { NODE_TYPES, clone, traverse } from './utils';
 
 import ExampleNode from './example.json';
@@ -38,15 +37,21 @@ const createTextNode = (node) => {
   return textNode;
 };
 
+const cloneFills = (createdNodeFills, outgoingNodeFills) => {
+  try {
+    const fills = clone(createdNodeFills);
+    console.log('fills', fills);
+    if (!outgoingNodeFills.length || outgoingNodeFills[0].type !== 'SOLID') return [];
+    fills[0] = figma.util.solidPaint(outgoingNodeFills[0].color, fills[0]);
+    return fills;
+  } catch (error) {
+    console.log('Error cloning fills', error);
+  }
+};
 const createFrameNode = (node) => {
   const { children, ...rest } = node;
   let frameNode = figma.createFrame();
-  if (frameNode.fills[0].type === 'SOLID') {
-    const fills = clone(frameNode.fills);
-    fills[0] = figma.util.solidPaint('#000000', fills[0]);
-    frameNode.fills = fills;
-    console.log('Framenode fills', frameNode.fills);
-  }
+
   console.log('earlier', frameNode);
   frameNode.resize(node.width, node.height);
   frameNode.name = node.name;
@@ -65,6 +70,9 @@ const createFrameNode = (node) => {
   frameNode.visible = node.visible;
   frameNode.blendMode = node.blendMode;
   frameNode.effects = [...node.effects];
+  if (frameNode.fills[0].type === 'SOLID') {
+    frameNode.fills = cloneFills(frameNode.fills, node.fills);
+  }
 
   if (children) {
     children.forEach((child) => {
@@ -95,6 +103,10 @@ const createVectorNode = (node) => {
   vectorNode.blendMode = node.blendMode;
   vectorNode.effects = node.effects;
 
+  // if (vectorNode.fills[0].type === 'SOLID') {
+  //   vectorNode.fills = cloneFills(vectorNode.fills, node.fills);
+  // }
+
   if (vectorPaths) {
     vectorNode.vectorPaths = vectorPaths;
   }
@@ -107,12 +119,11 @@ const createVectorNode = (node) => {
 };
 
 const createRectangleNode = (node) => {
-  const { width, height, ...rest } = node;
+  const { width, height, children, ...rest } = node;
   let rectangleNode = figma.createRectangle();
   rectangleNode.resize(width, height);
   rectangleNode.x = node.x;
   rectangleNode.y = node.y;
-  rectangleNode.fills = node.fills;
   rectangleNode.strokes = node.strokes;
   rectangleNode.strokeWeight = node.strokeWeight;
   rectangleNode.strokeAlign = node.strokeAlign;
@@ -121,6 +132,12 @@ const createRectangleNode = (node) => {
   rectangleNode.visible = node.visible;
   rectangleNode.blendMode = node.blendMode;
   rectangleNode.effects = node.effects;
+  rectangleNode.isMask = node.isMask;
+  rectangleNode.maskType = node.maskType;
+
+  if (rectangleNode.fills[0].type === 'SOLID') {
+    rectangleNode.fills = cloneFills(rectangleNode.fills, node.fills);
+  }
 
   return rectangleNode;
 };
@@ -139,7 +156,44 @@ const createGroupNode = (node) => {
   groupNode.blendMode = node.blendMode;
   groupNode.effects = node.effects;
 
+  // if (groupNode.fills[0].type === 'SOLID') {
+  //   groupNode.fills = cloneFills(groupNode.fills, node.fills);
+  // }
+
   return groupNode;
+};
+
+const createComponentNode = (node) => {
+  const { children, width, height, ...rest } = node;
+  let componentNode = figma.createComponent();
+  componentNode.resize(width, height);
+  componentNode.name = node.name;
+  componentNode.x = node.x;
+  componentNode.y = node.y;
+  componentNode.rotation = node.rotation;
+  componentNode.opacity = node.opacity;
+  componentNode.visible = node.visible;
+  componentNode.blendMode = node.blendMode;
+  componentNode.effects = node.effects;
+  componentNode.strokes = node.strokes;
+  componentNode.strokeWeight = node.strokeWeight;
+  componentNode.strokeAlign = node.strokeAlign;
+  componentNode.cornerRadius = node.cornerRadius;
+
+  if (componentNode.fills[0].type === 'SOLID') {
+    componentNode.fills = cloneFills(componentNode.fills, node.fills);
+  }
+
+  if (children) {
+    children.forEach((child) => {
+      const childNode = createNode(child);
+      if (childNode) {
+        componentNode.appendChild(childNode);
+      }
+    });
+  }
+
+  return componentNode;
 };
 
 const createNode = (node) => {
@@ -157,6 +211,7 @@ const createNode = (node) => {
       newNode = createGroupNode(node);
       break;
     case NODE_TYPES.COMPONENT:
+      newNode = createComponentNode(node);
       break;
     case NODE_TYPES.RECTANGLE:
       newNode = createRectangleNode(node);
@@ -198,6 +253,7 @@ figma.ui.onmessage = (msg) => {
       console.log('Vector node', node.vectorNetwork);
     }
     console.log(traverse(figma.currentPage.selection[0]));
+    console.log('isMask', node.isMask, node.maskType);
   } else if (msg.type === 'convert-node-to-json') {
     const node = figma.currentPage.selection[0];
     const nodeJSON = JSON.stringify(traverse(node), null, 2);

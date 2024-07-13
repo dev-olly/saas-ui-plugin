@@ -1,6 +1,6 @@
 export const rgbToHex = (rgbColor) => {
   // Check if the input is in the correct format
-  const rgbRegex = /^(rgba?\()(\d+),\s*(\d+),\s*(\d+)(\s*,\s*([\d.]+)\))?$/;
+  const rgbRegex = /^(rgba?\()(\d+(\.\d+)?),\s*(\d+(\.\d+)?),\s*(\d+(\.\d+)?)(\s*,\s*([\d.]+)\))?$/;
   const match = rgbColor.match(rgbRegex);
 
   if (!match) {
@@ -92,6 +92,8 @@ export function traverse(node) {
     effects: node.effects,
     vectorNetwork: node.vectorNetwork,
     vectorPaths: node.vectorPaths,
+    isMask: node.isMask,
+    maskType: node.maskType,
   };
   return obj;
 }
