@@ -4,9 +4,9 @@
   - Create Vector - done
   - GroupNode - done
   - Rectangle - done
-  - figure this fill issue out
+  - figure this fill issue out - done
+  - Component - done
   - Document
   - Instance
-  - Component
   - TableNode
 - Build Schema
