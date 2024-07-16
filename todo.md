@@ -9,4 +9,5 @@
   - Document
   - Instance
   - TableNode
+- Handle Layout issues
 - Build Schema

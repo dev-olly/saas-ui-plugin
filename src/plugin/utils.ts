@@ -57,10 +57,6 @@ export const hexToRgb = (hexCode, includeAlpha = true) => {
     visible: true,
   };
 
-  // Construct RGB or RGBA string
-  const rgbString = `rgb(${red}, ${green}, ${blue})`;
-  const rgbaString = includeAlpha ? `rgba(${red}, ${green}, ${blue}, ${alpha})` : undefined;
-
   return objColor;
 };
 
@@ -94,6 +90,17 @@ export function traverse(node) {
     vectorPaths: node.vectorPaths,
     isMask: node.isMask,
     maskType: node.maskType,
+    layoutAlign: node.layoutAlign,
+    layoutGrow: node.layoutGrow,
+    layoutMode: node.layoutMode,
+    layoutPositioning: node.layoutPositioning,
+    layoutSizingVertical: node.layoutSizingVertical,
+    layoutSizingHorizontal: node.layoutSizingHorizontal,
+    primaryAxisAlignItems: node.primaryAxisAlignItems,
+    primaryAxisSizingMode: node.primaryAxisSizingMode,
+    counterAxisSizingMode: node.counterAxisSizingMode,
+    counterAxisAlignItems: node.counterAxisAlignItems,
+    counterAxisAlignContent: node.counterAxisAlignContent,
   };
   return obj;
 }
