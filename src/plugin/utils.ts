@@ -106,6 +106,10 @@ export function traverse(node) {
     paddingTop: node.paddingTop,
     paddingBottom: node.paddingBottom,
     itemSpacing: node.itemSpacing,
+    bottomLeftRadius: node.bottomLeftRadius,
+    bottomRightRadius: node.bottomRightRadius,
+    topLeftRadius: node.topLeftRadius,
+    topRightRadius: node.topRightRadius,
   };
   return obj;
 }

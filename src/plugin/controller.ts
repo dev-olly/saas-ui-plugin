@@ -65,9 +65,10 @@ const createFrameNode = (node, parent = undefined) => {
   frameNode.constraints = node.constraints;
 
   frameNode.strokes = [...node.strokes];
-  frameNode.strokeWeight = node.strokeWeight;
+  if (node.strokeWeight) {
+    frameNode.strokeWeight = node.strokeWeight;
+  }
   frameNode.strokeAlign = node.strokeAlign;
-  frameNode.cornerRadius = node.cornerRadius;
   frameNode.opacity = node.opacity;
   frameNode.visible = node.visible;
   frameNode.blendMode = node.blendMode;
@@ -91,6 +92,12 @@ const createFrameNode = (node, parent = undefined) => {
   frameNode.paddingTop = node.paddingTop;
   frameNode.paddingBottom = node.paddingBottom;
   frameNode.itemSpacing = node.itemSpacing;
+
+  // border radius
+  frameNode.bottomLeftRadius = node.bottomLeftRadius;
+  frameNode.bottomRightRadius = node.bottomRightRadius;
+  frameNode.topLeftRadius = node.topLeftRadius;
+  frameNode.topRightRadius = node.topRightRadius;
 
   if (parent) {
     frameNode.layoutSizingHorizontal = node.layoutSizingHorizontal;
