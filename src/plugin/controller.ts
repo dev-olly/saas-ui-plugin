@@ -210,10 +210,14 @@ const createGroupNode = (node, parent) => {
   return groupNode;
 };
 
-const createComponentNode = (node, parent) => {
+const createComponentNode = (node, parent = undefined) => {
   const { children, width, height } = node;
   let componentNode = figma.createComponent();
-  parent.appendChild(componentNode);
+
+  if (parent) {
+    parent.appendChild(componentNode);
+  }
+
   componentNode.resize(width, height);
   componentNode.name = node.name;
   componentNode.x = node.x;
@@ -275,7 +279,10 @@ const createNode = (node, parent = undefined) => {
       newNode = createComponentNode(node, parent);
       break;
     case NODE_TYPES.INSTANCE:
-      newNode = createFrameNode(node, parent);
+      const component = createComponentNode(node);
+      newNode = component.createInstance() as InstanceNode;
+      component.remove();
+      parent.appendChild(newNode);
       break;
     case NODE_TYPES.RECTANGLE:
       newNode = createRectangleNode(node, parent);

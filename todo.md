@@ -10,4 +10,5 @@
   - Instance
   - TableNode
 - Handle Layout issues - done
+- Fix image issues
 - Build Schema
