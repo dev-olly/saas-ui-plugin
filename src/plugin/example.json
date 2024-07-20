@@ -917,7 +917,8 @@
       "paddingLeft": 8,
       "paddingRight": 8,
       "paddingTop": 8,
-      "paddingBottom": 8
+      "paddingBottom": 8,
+      "itemSpacing": 16
     },
     {
       "id": "70:91",
@@ -1590,7 +1591,8 @@
       "paddingLeft": 8,
       "paddingRight": 8,
       "paddingTop": 8,
-      "paddingBottom": 8
+      "paddingBottom": 8,
+      "itemSpacing": 16
     },
     {
       "id": "10:223",
@@ -2560,7 +2562,8 @@
       "paddingLeft": 8,
       "paddingRight": 8,
       "paddingTop": 8,
-      "paddingBottom": 8
+      "paddingBottom": 8,
+      "itemSpacing": 16
     },
     {
       "id": "10:228",
@@ -3545,7 +3548,8 @@
       "paddingLeft": 8,
       "paddingRight": 8,
       "paddingTop": 8,
-      "paddingBottom": 8
+      "paddingBottom": 8,
+      "itemSpacing": 16
     }
   ],
   "width": 200,
@@ -3582,5 +3586,6 @@
   "paddingLeft": 0,
   "paddingRight": 0,
   "paddingTop": 0,
-  "paddingBottom": 0
+  "paddingBottom": 0,
+  "itemSpacing": 0
 }

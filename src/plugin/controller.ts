@@ -87,6 +87,7 @@ const createFrameNode = (node, parent = undefined) => {
   frameNode.paddingRight = node.paddingRight;
   frameNode.paddingTop = node.paddingTop;
   frameNode.paddingBottom = node.paddingBottom;
+  frameNode.itemSpacing = node.itemSpacing;
 
   if (parent) {
     frameNode.layoutSizingHorizontal = node.layoutSizingHorizontal;
@@ -226,6 +227,13 @@ const createComponentNode = (node, parent) => {
   componentNode.layoutSizingHorizontal = node.layoutSizingHorizontal;
   componentNode.primaryAxisAlignItems = node.primaryAxisAlignItems;
   componentNode.primaryAxisSizingMode = node.primaryAxisSizingMode;
+
+  // padding
+  componentNode.paddingLeft = node.paddingLeft;
+  componentNode.paddingRight = node.paddingRight;
+  componentNode.paddingTop = node.paddingTop;
+  componentNode.paddingBottom = node.paddingBottom;
+  componentNode.itemSpacing = node.itemSpacing;
 
   if (componentNode.fills[0].type === 'SOLID') {
     componentNode.fills = cloneFills(componentNode.fills, node.fills);

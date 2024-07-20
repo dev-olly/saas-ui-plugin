@@ -105,6 +105,7 @@ export function traverse(node) {
     paddingRight: node.paddingRight,
     paddingTop: node.paddingTop,
     paddingBottom: node.paddingBottom,
+    itemSpacing: node.itemSpacing,
   };
   return obj;
 }
