@@ -15,19 +15,22 @@ const createTextNode = (node, parent) => {
 
       parent.appendChild(textNode);
 
-      await figma.loadFontAsync({ family: 'Inter', style: 'Regular' });
-      textNode.fontName = { family: 'Inter', style: 'Regular' };
+      await figma.loadFontAsync(node.fontName);
+      textNode.fontName = node.fontName;
 
       textNode.characters = characters;
       textNode.x = node.x;
       textNode.y = node.y;
-      textNode.fills = node.fills;
       textNode.strokes = node.strokes;
       textNode.fontSize = fontSize;
       textNode.name = node.name;
 
       textNode.textAlignHorizontal = textAlignHorizontal;
       textNode.textAlignVertical = textAlignVertical;
+
+      if (textNode.fills[0].type === 'SOLID') {
+        textNode.fills = cloneFills(textNode.fills, node.fills);
+      }
       // assign other properties in the rest, including children
       Object.assign(textNode, rest);
     })();
