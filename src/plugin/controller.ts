@@ -274,6 +274,9 @@ const createNode = (node, parent = undefined) => {
     case NODE_TYPES.COMPONENT:
       newNode = createComponentNode(node, parent);
       break;
+    case NODE_TYPES.INSTANCE:
+      newNode = createFrameNode(node, parent);
+      break;
     case NODE_TYPES.RECTANGLE:
       newNode = createRectangleNode(node, parent);
       break;
