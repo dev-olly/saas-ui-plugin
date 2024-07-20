@@ -4,7 +4,7 @@ import ExampleNode from './example.json';
 
 figma.showUI(__html__, { width: 400, height: 700 });
 
-const createTextNode = (node) => {
+const createTextNode = (node, parent) => {
   const { characters, fontSize, fontName, textAlignHorizontal, textAlignVertical, ...rest } = node;
 
   let textNode;
@@ -12,6 +12,8 @@ const createTextNode = (node) => {
   try {
     (async () => {
       textNode = figma.createText();
+
+      parent.appendChild(textNode);
 
       await figma.loadFontAsync({ family: 'Inter', style: 'Regular' });
       textNode.fontName = { family: 'Inter', style: 'Regular' };
@@ -45,9 +47,12 @@ const cloneFills = (createdNodeFills, outgoingNodeFills) => {
     console.log('Error cloning fills', error);
   }
 };
-const createFrameNode = (node) => {
+const createFrameNode = (node, parent = undefined) => {
   const { children } = node;
   let frameNode = figma.createFrame();
+  if (parent) {
+    parent.appendChild(frameNode);
+  }
 
   frameNode.resize(node.width, node.height);
   frameNode.name = node.name;
@@ -76,27 +81,33 @@ const createFrameNode = (node) => {
   frameNode.counterAxisSizingMode = node.counterAxisSizingMode;
   frameNode.counterAxisAlignItems = node.counterAxisAlignItems;
   frameNode.counterAxisAlignContent = node.counterAxisAlignContent;
-  frameNode.layoutSizingHorizontal = node.layoutSizingHorizontal;
 
+  // padding
+  frameNode.paddingLeft = node.paddingLeft;
+  frameNode.paddingRight = node.paddingRight;
+  frameNode.paddingTop = node.paddingTop;
+  frameNode.paddingBottom = node.paddingBottom;
+
+  if (parent) {
+    frameNode.layoutSizingHorizontal = node.layoutSizingHorizontal;
+  }
   if (frameNode.fills[0].type === 'SOLID') {
     frameNode.fills = cloneFills(frameNode.fills, node.fills);
   }
 
   if (children) {
     children.forEach((child) => {
-      const childNode = createNode(child);
-      if (childNode) {
-        frameNode.appendChild(childNode);
-      }
+      createNode(child, frameNode);
     });
   }
 
   return frameNode;
 };
 
-const createVectorNode = (node) => {
+const createVectorNode = (node, parent) => {
   const { width, height, vectorPaths, vectorNetwork } = node;
   let vectorNode = figma.createVector();
+  parent.appendChild(vectorNode);
   vectorNode.resize(width, height);
   vectorNode.x = node.x;
   vectorNode.y = node.y;
@@ -127,9 +138,10 @@ const createVectorNode = (node) => {
   return vectorNode;
 };
 
-const createRectangleNode = (node) => {
+const createRectangleNode = (node, parent) => {
   const { width, height } = node;
   let rectangleNode = figma.createRectangle();
+  parent.appendChild(rectangleNode);
   rectangleNode.resize(width, height);
   rectangleNode.x = node.x;
   rectangleNode.y = node.y;
@@ -158,10 +170,14 @@ const createRectangleNode = (node) => {
   return rectangleNode;
 };
 
-const createGroupNode = (node) => {
+const createGroupNode = (node, parent) => {
   const { width, height } = node;
-  const childrenNodes = node.children.map((child) => createNode(child));
-  let groupNode = figma.group(childrenNodes, figma.currentPage);
+  const sampleNode = figma.createFrame();
+  let groupNode = figma.group([sampleNode], figma.currentPage);
+  node.children.map((child) => createNode(child, groupNode));
+  sampleNode.remove();
+
+  parent.appendChild(groupNode);
   groupNode.resize(width, height);
   groupNode.name = node.name;
   groupNode.x = node.x;
@@ -171,7 +187,6 @@ const createGroupNode = (node) => {
   groupNode.visible = node.visible;
   groupNode.blendMode = node.blendMode;
   groupNode.effects = node.effects;
-
   // layout properties
 
   // layout properties
@@ -184,9 +199,10 @@ const createGroupNode = (node) => {
   return groupNode;
 };
 
-const createComponentNode = (node) => {
+const createComponentNode = (node, parent) => {
   const { children, width, height } = node;
   let componentNode = figma.createComponent();
+  parent.appendChild(componentNode);
   componentNode.resize(width, height);
   componentNode.name = node.name;
   componentNode.x = node.x;
@@ -217,43 +233,39 @@ const createComponentNode = (node) => {
 
   if (children) {
     children.forEach((child) => {
-      const childNode = createNode(child);
-      if (childNode) {
-        componentNode.appendChild(childNode);
-      }
+      createNode(child, componentNode);
     });
   }
 
   return componentNode;
 };
 
-const createNode = (node) => {
+const createNode = (node, parent = undefined) => {
   const { type } = node;
   let newNode;
   switch (type) {
     case NODE_TYPES.TEXT:
-      newNode = createTextNode(node);
+      newNode = createTextNode(node, parent);
       break;
     case NODE_TYPES.FRAME:
-      newNode = createFrameNode(node);
+      newNode = createFrameNode(node, parent);
       break;
     case NODE_TYPES.GROUP:
-      newNode = createGroupNode(node);
+      newNode = createGroupNode(node, parent);
       break;
     case NODE_TYPES.COMPONENT:
-      newNode = createComponentNode(node);
+      newNode = createComponentNode(node, parent);
       break;
     case NODE_TYPES.RECTANGLE:
-      newNode = createRectangleNode(node);
+      newNode = createRectangleNode(node, parent);
       break;
     case NODE_TYPES.VECTOR:
-      newNode = createVectorNode(node);
+      newNode = createVectorNode(node, parent);
       break;
 
     default:
       break;
   }
-
   return newNode;
 };
 
@@ -279,6 +291,7 @@ figma.ui.onmessage = (msg) => {
     });
   } else if (msg.type === 'log-node') {
     const node = figma.currentPage.selection[0];
+
     console.log(traverse(node));
   } else if (msg.type === 'convert-node-to-json') {
     const node = figma.currentPage.selection[0];
@@ -289,32 +302,16 @@ figma.ui.onmessage = (msg) => {
       message: nodeJSON,
     });
   } else if (msg.type === 'create-node') {
-    const parent = figma.createFrame();
-    figma.currentPage.appendChild(parent);
+    let parentFrame;
+    if (ExampleNode.type === NODE_TYPES.FRAME) {
+      parentFrame = createFrameNode(ExampleNode);
+    }
 
-    parent.layoutMode = 'VERTICAL';
-    parent.layoutSizingVertical = 'HUG';
-    parent.layoutSizingHorizontal = 'FIXED';
-    parent.constraints = {
-      horizontal: 'MIN',
-      vertical: 'MIN',
-    };
-    parent.counterAxisAlignContent = 'AUTO';
-    parent.counterAxisAlignItems = 'MIN';
-    parent.counterAxisSizingMode = 'AUTO';
-    parent.primaryAxisAlignItems = 'MIN';
-    parent.primaryAxisSizingMode = 'FIXED';
+    parentFrame.layoutMode = ExampleNode.layoutMode;
+    parentFrame.resizeWithoutConstraints(ExampleNode.width, ExampleNode.height);
 
-    const child = figma.createFrame();
-    child.layoutMode = 'VERTICAL';
-    child.layoutSizingVertical = 'HUG';
-    child.layoutSizingHorizontal = 'FILL';
-    parent.appendChild(child);
+    // createNode(ExampleNode, parentFrame);
 
-    // const node = createNode(ExampleNode);
-    // console.log('after created', node);
-    // figma.currentPage.appendChild(node);
-    figma.currentPage.selection = [parent];
     console.log('Node created');
   }
 };

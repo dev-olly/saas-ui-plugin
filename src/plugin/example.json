@@ -913,7 +913,11 @@
       "primaryAxisSizingMode": "FIXED",
       "counterAxisSizingMode": "AUTO",
       "counterAxisAlignItems": "CENTER",
-      "counterAxisAlignContent": "AUTO"
+      "counterAxisAlignContent": "AUTO",
+      "paddingLeft": 8,
+      "paddingRight": 8,
+      "paddingTop": 8,
+      "paddingBottom": 8
     },
     {
       "id": "70:91",
@@ -1582,7 +1586,11 @@
       "primaryAxisSizingMode": "FIXED",
       "counterAxisSizingMode": "AUTO",
       "counterAxisAlignItems": "CENTER",
-      "counterAxisAlignContent": "AUTO"
+      "counterAxisAlignContent": "AUTO",
+      "paddingLeft": 8,
+      "paddingRight": 8,
+      "paddingTop": 8,
+      "paddingBottom": 8
     },
     {
       "id": "10:223",
@@ -2548,7 +2556,11 @@
       "primaryAxisSizingMode": "FIXED",
       "counterAxisSizingMode": "AUTO",
       "counterAxisAlignItems": "CENTER",
-      "counterAxisAlignContent": "AUTO"
+      "counterAxisAlignContent": "AUTO",
+      "paddingLeft": 8,
+      "paddingRight": 8,
+      "paddingTop": 8,
+      "paddingBottom": 8
     },
     {
       "id": "10:228",
@@ -3529,7 +3541,11 @@
       "primaryAxisSizingMode": "FIXED",
       "counterAxisSizingMode": "AUTO",
       "counterAxisAlignItems": "CENTER",
-      "counterAxisAlignContent": "AUTO"
+      "counterAxisAlignContent": "AUTO",
+      "paddingLeft": 8,
+      "paddingRight": 8,
+      "paddingTop": 8,
+      "paddingBottom": 8
     }
   ],
   "width": 200,
@@ -3557,10 +3573,14 @@
   "layoutMode": "VERTICAL",
   "layoutPositioning": "AUTO",
   "layoutSizingVertical": "HUG",
-  "layoutSizingHorizontal": "FIXED",
+  "layoutSizingHorizontal": "FILL",
   "primaryAxisAlignItems": "MIN",
   "primaryAxisSizingMode": "AUTO",
   "counterAxisSizingMode": "FIXED",
   "counterAxisAlignItems": "MIN",
-  "counterAxisAlignContent": "AUTO"
+  "counterAxisAlignContent": "AUTO",
+  "paddingLeft": 0,
+  "paddingRight": 0,
+  "paddingTop": 0,
+  "paddingBottom": 0
 }

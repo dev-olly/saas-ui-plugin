@@ -101,6 +101,10 @@ export function traverse(node) {
     counterAxisSizingMode: node.counterAxisSizingMode,
     counterAxisAlignItems: node.counterAxisAlignItems,
     counterAxisAlignContent: node.counterAxisAlignContent,
+    paddingLeft: node.paddingLeft,
+    paddingRight: node.paddingRight,
+    paddingTop: node.paddingTop,
+    paddingBottom: node.paddingBottom,
   };
   return obj;
 }
