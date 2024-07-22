@@ -1,4 +1,4 @@
-import { NODE_TYPES, clone, traverse } from './utils';
+import { NODE_TYPES, traverse } from './utils';
 
 import ExampleNode from './example.json';
 

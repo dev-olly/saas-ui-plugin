@@ -1,11 +1,10 @@
 import React from 'react';
-import logo from '../assets/logo.svg';
 import '../styles/output.css';
-import { Tag } from './Tag';
 import '../styles/ui.css';
 import { Loader } from './Loader';
-import { SaaSComponent } from './types';
+import { Tag } from './Tag';
 import { TemplateImage } from './TemplateImage';
+import { SaaSComponent } from './types';
 
 const COMPONENT_TAGS = [
   'headers',
