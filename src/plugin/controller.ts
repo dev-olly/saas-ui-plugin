@@ -181,6 +181,28 @@ const createRectangleNode = (node, parent) => {
   return rectangleNode;
 };
 
+function clone(val) {
+  const type = typeof val;
+  if (val === null) {
+    return null;
+  } else if (type === 'undefined' || type === 'number' || type === 'string' || type === 'boolean') {
+    return val;
+  } else if (type === 'object') {
+    if (val instanceof Array) {
+      return val.map((x) => clone(x));
+    } else if (val instanceof Uint8Array) {
+      return new Uint8Array(val);
+    } else {
+      let o = {};
+      for (const key in val) {
+        o[key] = clone(val[key]);
+      }
+      return o;
+    }
+  }
+  throw 'unknown';
+}
+
 const createGroupNode = (node, parent) => {
   const { width, height } = node;
   const sampleNode = figma.createFrame();
@@ -211,6 +233,7 @@ const createGroupNode = (node, parent) => {
 };
 
 const createComponentNode = (node, parent = undefined) => {
+  console.log('Creating component node');
   const { children, width, height } = node;
   let componentNode = figma.createComponent();
 
@@ -252,6 +275,13 @@ const createComponentNode = (node, parent = undefined) => {
   if (componentNode.fills[0].type === 'SOLID') {
     componentNode.fills = cloneFills(componentNode.fills, node.fills);
   }
+  if (node.fills.length && node.fills[0].type === 'IMAGE') {
+    {
+      (async () => await invertImages(node, componentNode))();
+    }
+
+    // componentNode.fills = fills;
+  }
 
   if (children) {
     children.forEach((child) => {
@@ -261,6 +291,25 @@ const createComponentNode = (node, parent = undefined) => {
 
   return componentNode;
 };
+
+async function invertImages(node, mainNode) {
+  const newFills = [];
+  console.log('called');
+  for (const paint of node.fills) {
+    if (paint.type === 'IMAGE') {
+      // Get the (encoded) bytes for this image.
+      const image = figma.getImageByHash(paint.imageHash);
+
+      console.log('image', image);
+
+      const bytes = await image.getBytesAsync();
+
+      console.log('bytes', bytes);
+      // TODO: Do something with the bytes!
+    }
+  }
+  mainNode.fills = newFills;
+}
 
 const createNode = (node, parent = undefined) => {
   const { type } = node;
@@ -279,8 +328,11 @@ const createNode = (node, parent = undefined) => {
       newNode = createComponentNode(node, parent);
       break;
     case NODE_TYPES.INSTANCE:
+      //  create component in order to create instance
       const component = createComponentNode(node);
       newNode = component.createInstance() as InstanceNode;
+
+      // remove component after creating instance
       component.remove();
       parent.appendChild(newNode);
       break;
