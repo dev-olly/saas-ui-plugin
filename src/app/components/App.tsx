@@ -49,12 +49,16 @@ function App() {
     window.parent.postMessage({ pluginMessage: { type: 'convert-node-to-json' } }, '*');
   };
 
+  const createComponentInFigma = (component) => {
+    window.parent.postMessage({ pluginMessage: { type: 'create-component', component } }, '*');
+  };
+
   React.useEffect(() => {
-    // fetchComponents().then((data) => {
-    //   console.log(data);
-    //   setComponents(data);
-    //   setLoading(false);
-    // });
+    fetchComponents().then((data) => {
+      console.log(data);
+      setComponents(data);
+      setLoading(false);
+    });
     // This is how we read messages sent from the plugin controller
     window.onmessage = (event) => {
       const { type, message } = event.data.pluginMessage;
@@ -89,7 +93,7 @@ function App() {
         ))}
       </div>
 
-      <div className="mt-2">
+      {/* <div className="mt-2">
         <button className="px-3 py-2 bg-white text-sm" onClick={onClickHandler}>
           Log Node
         </button>
@@ -101,10 +105,16 @@ function App() {
         <button className="px-3 py-1 border-1 text-sm border-black ml-4 rounded-md" onClick={convertNodeToJSON}>
           Convert Node to JSON
         </button>
-      </div>
+      </div> */}
 
       <div className="images grid grid-cols-2 gap-4 mt-6">
-        {loading ? <Loader /> : components.map((component) => <TemplateImage data={component} key={component.id} />)}
+        {loading ? (
+          <Loader />
+        ) : (
+          components.map((component) => (
+            <TemplateImage data={component} key={component.id} onClick={createComponentInFigma} />
+          ))
+        )}
       </div>
     </div>
   );

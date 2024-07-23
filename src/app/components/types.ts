@@ -4,4 +4,5 @@ export type SaaSComponent = {
   img_src: string;
   type: string;
   name: string;
+  body: Record<string, any>;
 };

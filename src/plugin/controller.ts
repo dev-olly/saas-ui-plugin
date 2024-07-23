@@ -393,5 +393,17 @@ figma.ui.onmessage = (msg) => {
     // createNode(ExampleNode, parentFrame);
 
     console.log('Node created');
+  } else if (msg.type === 'create-component') {
+    let parentFrame;
+    const node = msg.component.body;
+    console.log(msg.component);
+    if (ExampleNode.type === NODE_TYPES.FRAME) {
+      parentFrame = createFrameNode(node);
+    }
+
+    parentFrame.layoutMode = node.layoutMode;
+    parentFrame.resizeWithoutConstraints(node.width, node.height);
+
+    console.log('Parent created');
   }
 };
